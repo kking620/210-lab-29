@@ -4,7 +4,14 @@ and volume of traffic within an airport over the course of 1 year, which has bee
 This software will illustrate the potential impact of certain events on the predicted efficiency of these airports.
 
 Implementation:
-I plan to use a std:map to store and manage data related to the different attributes of each airport across these different airports.
+I plan to use a std:map to store and manage data related to the different attributes of each airport across the country.
 This map will also categorize the averages for each of the given attributes, which will be designated into three std::lists representing
-number of people within the airport, how many delays were reported, and  
+the number of people within the airport, how many delays were reported, and average reviews for the day.
+
+One map entry would be for an airport on the West Coast, another entry would be for an airport on the East Cost, and another map entry
+would be for a low population airport. The three lists for each of these map entries would be amount of people, number of delays, and average reviews.
+
 Simluated Events:
+This simulation will focus on three events: the opening of other nearby airports; extreme weather events, such as hurricanes or snowstorms; 
+and a holiday rush of people wanting to take flights. At any given time period, computer errors could occur, flights can be delayed for cleaning,
+or a plane could unfortunately crash.
