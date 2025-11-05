@@ -1,0 +1,10 @@
+Project Overview:
+My project creates an airport simulation, that is designed to predict the changes of the average efficiency
+and volume of traffic within an airport over the course of 1 year, which has been broken up into 24 two week time periods.
+This software will illustrate the potential impact of certain events on the predicted efficiency of these airports.
+
+Implementation:
+I plan to use a std:map to store and manage data related to the different attributes of each airport across these different airports.
+This map will also categorize the averages for each of the given attributes, which will be designated into three std::lists representing
+number of people within the airport, how many delays were reported, and  
+Simluated Events:
