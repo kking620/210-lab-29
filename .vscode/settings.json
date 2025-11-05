@@ -3,6 +3,7 @@
         "map": "cpp",
         "array": "cpp",
         "xstring": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "list": "cpp"
     }
 }
