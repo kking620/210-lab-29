@@ -5,7 +5,6 @@
 #include <sstream>
 #include <map>
 #include <list>
-#include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
@@ -67,8 +66,6 @@ int main() {
         //for 26 time intervals
             //Iterate through each airport in the map
             for (auto &pair : airports) {
-                string cAPName = pair.first;
-                airportDetails& cAPData = pair.second;
             //for each airport, simulate the changes that you will see
                 //randomly decide if a computer error occurs, plane arrives early,
                 //and a very low chance for a plane crash
@@ -104,12 +101,20 @@ int main() {
 
                 //print the changes in the values of the airport for the current time interval
                     //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
-                cout << fixed << setprecision(0);
-                cout << "For " << cAPName << ":";
-                cout << cAPData[0].back() << " people are now present, ";
-                cout << cAPData[1].back() << " delays reported, ";
-                cout << fixed << setprecision(2);
-                cout << "And the average reviews are " << cAPData[2].back() << endl; 
+                for ( map<string, airportDetails>::iterator it = airports.begin(); it != airports.end(); ++it) {
+                    cout << fixed << setprecision(0);
+                    cout << "For " << pair.first << ":";
+                    for (double people : pair.second[0]){
+                        cout << people << " people are now present, ";
+                    }
+                    for (double delay : pair.second[1]){
+                        cout << delay << " delays reported, ";
+                    }
+                        cout << fixed << setprecision(2);
+                    for (double review : pair.second[2]){
+                        cout << "and the average reviews are " << review << endl; 
+                    }
+                }
             }
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
         this_thread::sleep_for(chrono::seconds(1));

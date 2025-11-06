@@ -4,6 +4,11 @@
         "array": "cpp",
         "xstring": "cpp",
         "tuple": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "utility": "cpp",
+        "iomanip": "cpp",
+        "ios": "cpp",
+        "chrono": "cpp",
+        "iostream": "cpp"
     }
 }
