@@ -1,6 +1,6 @@
 Project Overview:
 My project creates an airport simulation, that is designed to predict the changes of the average efficiency
-and volume of traffic within an airport over the course of 1 year, which has been broken up into 24 two week time periods.
+and volume of traffic within an airport over the course of 1 year, which has been broken up into 26 two week time periods.
 This software will illustrate the potential impact of certain events on the predicted efficiency of these airports.
 
 Implementation:
@@ -10,6 +10,7 @@ the number of people within the airport, how many delays were reported, and aver
 
 One map entry would be for an airport on the West Coast, another entry would be for an airport on the East Cost, and another map entry
 would be for a low population airport. The three lists for each of these map entries would be amount of people, number of delays, and average reviews.
+The name of the airport will serve as the key for the map.
 
 Simluated Events:
 This simulation will focus on three events: the opening of other nearby airports; extreme weather events, such as hurricanes or snowstorms; 
