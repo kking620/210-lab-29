@@ -14,5 +14,5 @@ The name of the airport will serve as the key for the map.
 
 Simluated Events:
 This simulation will focus on three events: the opening of other nearby airports; extreme weather events, such as hurricanes or snowstorms; 
-and a holiday rush of people wanting to take flights. At any given time period, computer errors could occur, flights can be delayed for cleaning,
-or a plane could unfortunately crash.
+and unfortunately a plane could crash. At any given time period, computer errors could occur, flights can be delayed for cleaning,
+or there could be a holiday rush.
