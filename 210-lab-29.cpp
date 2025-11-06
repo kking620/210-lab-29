@@ -10,6 +10,8 @@
 #include <string>
 #include <algorithm>
 #include <array>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -23,6 +25,7 @@ void holiday_event(map<string, array<list<double>, 3>>&);
 
 //Defining the main function
 int main() {
+    srand(time(0));
     //Parameters for the map of the airports, as well as defining the array with the three different values we will be obtaining
     using airportDetails = array<list<double>, 3>;
 
@@ -70,18 +73,36 @@ int main() {
                 //depending on the random occurence, update the amount of people, delays, and reviews
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-                
+                    int eventOccurs = rand() % 100;
+                    if (eventOccurs <= 60)
+                    computer_error(airports);
                     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
+                    int eventOccurs = rand() % 100;
+                    if (eventOccurs <= 40)
+                    early_arrival(airports);
                     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
+                    int eventOccurs = rand() % 100;
+                    if (eventOccurs <= 35)
+                    holiday_event(airports);
 
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
+                    int eventOccurs = rand() % 100;
+                    if (eventOccurs <= 15)
+                    new_airport_opening(airports);
                     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
+                    int eventOccurs = rand() % 100;
+                    if (eventOccurs <= 10)
+                    new_airport_opening(airports);
                     //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
+                    int eventOccurs = rand() % 100;
+                    if (eventOccurs <= 1)
+                    new_airport_opening(airports);
 
                 //print the changes in the values of the airport for the current time interval
                     //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
-        }
+       
+            }
                     //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
     }
     //End the main function
