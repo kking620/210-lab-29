@@ -10,6 +10,7 @@
 #include <cmath>
 #include <string>
 #include <algorithm>
+#include <numeric>
 #include <array>
 #include <chrono>
 #include <thread>
@@ -23,7 +24,7 @@ void new_airport_opening(map<string, array<list<double>, 3>>&, string);
 void computer_error(map<string, array<list<double>, 3>>&, string);
 void early_arrival(map<string, array<list<double>, 3>>&, string);
 void holiday_event(map<string, array<list<double>, 3>>&, string);
-void list_average(map<string, array<list<double>, 3>>&, string);
+double list_average(list<double>&);
 bool load_data(map<string, array<list<double>, 3>>&, string);
 
 //Defining the main function
@@ -57,32 +58,36 @@ int main() {
                 //for this code, dummy values have been placed in the eventOccurs section, but will be randomized during actual program
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-                    int e1 = rand() % 100 + 1;
-                    if (e1 <= 40)
-                    computer_error(airports, pair.first);
-                    //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
-                    int e2 = rand() % 100 + 1;
-                    if (e2 <= 30)
-                    early_arrival(airports, pair.first);
-                    //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
-                    int e3 = rand() % 100 + 1;
-                    if (e3 <= 20)
-                    holiday_event(airports, pair.first);
-
+                    int commonOccurrence = rand() % 100 + 1;
+                    if (commonOccurrence <= 60) {
+                        int e1 = rand() % 100 + 1;
+                        if (e1 <= 40)
+                        computer_error(airports, pair.first);
+                        //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
+                        int e2 = rand() % 100 + 1;
+                        if (e2 <= 30)
+                        early_arrival(airports, pair.first);
+                        //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
+                        int e3 = rand() % 100 + 1;
+                        if (e3 <= 20)
+                        holiday_event(airports, pair.first);
+                    }
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
-                    int e4 = rand() % 100 + 1;
-                    if (e4 <= 10)
-                    new_airport_opening(airports, pair.first);
-                    //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
-                    int e5 = rand() % 100 + 1;
-                    if (e5 <= 5)
-                    weather_event(airports, pair.first);
-                    //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
-                    int e6 = rand() % 100 + 1;
-                    if (e6 <= 1)
-                    plane_crash(airports, pair.first);
-
+                    int rareOccurrence = rand() % 100 + 1;
+                    if (rareOccurrence >= 80) {
+                        int e4 = rand() % 100 + 1;
+                        if (e4 <= 10)
+                        new_airport_opening(airports, pair.first);
+                        //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
+                        int e5 = rand() % 100 + 1;
+                        if (e5 <= 5)
+                        weather_event(airports, pair.first);
+                        //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
+                        int e6 = rand() % 100 + 1;
+                        if (e6 <= 1)
+                        plane_crash(airports, pair.first);
+                    }
                     cout << endl;
             }
             //print the changes in the values of the airport for the current time interval
@@ -91,12 +96,15 @@ int main() {
                 cout << fixed << setprecision(0);
                 cout << "For " << name << ":";
 
-                void list_average(map<string, array<list<double>, 3>>&, string);
+                double pwAvg = list_average(details[0]);
+                double dwAvg = list_average(details[1]);
+                double rwAvg = list_average(details[2]);
+                
 
-                cout << details[0].back() << " people are now present, ";
-                cout << details[1].back() << " delays reported, ";
+                cout << pwAvg << " people are now present, ";
+                cout << dwAvg << " delays reported, ";
                 cout << fixed << setprecision(2);
-                cout << "and the average reviews are " << details[2].back() << endl; 
+                cout << "and the average reviews are " << rwAvg << endl; 
             }
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
         cout << endl;
@@ -109,10 +117,14 @@ int main() {
         cout << fixed << setprecision(0);
         cout << "For " << name << ":";
 
-        cout << details[0].back() << " people were present, ";
-        cout << details[1].back() << " delays were reported, ";
+            double pyAvg = list_average(details[0]);
+            double dyAvg = list_average(details[1]);
+            double ryAvg = list_average(details[2]);
+
+        cout << pyAvg << " people were present, ";
+        cout << dyAvg << " delays were reported, ";
         cout << fixed << setprecision(2);
-        cout << "and the average reviews are " << details[2].back() << " every two weeks!" << endl; 
+        cout << "and the average reviews are " << ryAvg << " every two weeks!" << endl; 
     }
 
     //End the main function
@@ -148,7 +160,12 @@ bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
     }
 }
 
-void list_average(map<string, array<list<double>, 3>>&, string);
+double list_average(list<double>& aData) {
+    double sum = accumulate(aData.begin(), aData.end(), 0.0);
+    double average = sum / aData.size();
+
+    return average;
+}
 
 //Defining the prototype functions that were initialized earlier in the code
 void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
@@ -159,7 +176,7 @@ void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
         for (double& people_value : it->second[0]) {
             people_value = people_value * 0.5;
         }
-        for (double& delay_value : it->second[0]) {
+        for (double& delay_value : it->second[1]) {
             delay_value = delay_value * 2.0;
         }
     }
@@ -175,7 +192,7 @@ void weather_event(map<string, array<list<double>, 3>>& a, string n) {
         for (double& people_value : it->second[0]) {
             people_value = people_value * 1.25;
         }
-        for (double& delay_value : it->second[0]) {
+        for (double& delay_value : it->second[1]) {
             delay_value = delay_value * 1.5;
         }
         for (double& reviews : it->second[2]) {
@@ -212,7 +229,7 @@ void computer_error(map<string, array<list<double>, 3>>& a, string n) {
         for (double& people_value : it->second[0]) {
             people_value = people_value * 1.1;
         }
-        for (double& delay_value : it->second[0]) {
+        for (double& delay_value : it->second[1]) {
             delay_value = delay_value * 1.05;
         }
         for (double& reviews : it->second[2]) {
@@ -231,7 +248,7 @@ void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
         for (double& people_value : it->second[0]) {
             people_value = people_value * 0.95;
         }
-        for (double& delay_value : it->second[0]) {
+        for (double& delay_value : it->second[1]) {
             delay_value = delay_value * 0.95;
         }
         for (double& reviews : it->second[2]) {
@@ -251,7 +268,7 @@ void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
         for (double& people_value : it->second[0]) {
             people_value = people_value * 1.5;
         }
-        for (double& delay_value : it->second[0]) {
+        for (double& delay_value : it->second[1]) {
             delay_value = delay_value * 1.3;
         }
         for (double& reviews : it->second[2]) {
