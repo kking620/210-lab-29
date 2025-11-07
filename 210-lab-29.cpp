@@ -38,30 +38,15 @@ int main() {
     //Open an external file to read the initial data about the airports to populate the map
         //If the file does not open, print an error message and exit
     ifstream fin("testvalue.txt");
-    load_data(airports, "testvalue.txt");
-
-    //Read the data from the file and populate the map
-        //For each line, extract the name of the airport and the details of the airport
-        //Insert the approrpiate airport details into the map
-        string line;
-        string apName;
-        double nPeople, nDelays, avgReviews;
-
-        while(getline(fin, line)) {
-            stringstream ss(line);
-            
-            ss >> apName >> nPeople >> nDelays >> avgReviews;
-
-            airports[apName][0].push_back(nPeople);
-            airports[apName][1].push_back(nDelays);
-            airports[apName][2].push_back(avgReviews);
-        }
+    if (load_data(airports, "testvalue.txt") == false)
+        return 1;
     //Close the file
     fin.close();
 
     //Begin a time-based simulation for the typical changes in the data for the airport
     for (int timeInterval = 0; timeInterval < 26; timeInterval++) {
         //for 26 time intervals
+        cout << "Time Period " << timeInterval + 1 << endl;
             //Iterate through each airport in the map
             for (auto &pair : airports) {
             //for each airport, simulate the changes that you will see
@@ -71,35 +56,35 @@ int main() {
                 //for this code, dummy values have been placed in the eventOccurs section, but will be randomized during actual program
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-                    int eventOccurs = 60;
+                    int eventOccurs = rand() % 100 + 1;
                     if (eventOccurs <= 60)
                     computer_error(airports);
                     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
-                    eventOccurs = 40;
+                    eventOccurs = rand() % 100 + 1;
                     if (eventOccurs <= 40)
                     early_arrival(airports);
                     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
-                    eventOccurs = 35;
+                    eventOccurs = rand() % 100 + 1;
                     if (eventOccurs <= 35)
                     holiday_event(airports);
 
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
-                    eventOccurs = 15;
+                    eventOccurs = rand() % 100 + 1;
                     if (eventOccurs <= 15)
                     new_airport_opening(airports);
                     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
-                    eventOccurs = 10;
+                    eventOccurs = rand() % 100 + 1;
                     if (eventOccurs <= 10)
                     new_airport_opening(airports);
                     //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
-                    eventOccurs = 1;
+                    eventOccurs = rand() % 100 + 1;
                     if (eventOccurs <= 1)
                     new_airport_opening(airports);
 
                 //print the changes in the values of the airport for the current time interval
                     //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
-                for ( map<string, airportDetails>::iterator it = airports.begin(); it != airports.end(); ++it) {
+                for ( auto const& [name, details] : airports) {
                     cout << fixed << setprecision(0);
                     cout << "For " << pair.first << ":";
                     for (double people : pair.second[0]){
@@ -121,11 +106,31 @@ int main() {
     return 0;
 }
 
-bool load_data(map<string, array<list<double>, 3>>&, string& filename) {
+bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
     ifstream file(filename);
+
     if (!file.is_open()) {
         cout << filename << " could not be opened.\n";
         return false;
+    }
+    else {
+         //Read the data from the file and populate the map
+        //For each line, extract the name of the airport and the details of the airport
+        //Insert the approrpiate airport details into the map
+        string line;
+        string apName;
+        double nPeople, nDelays, avgReviews;
+
+        while(getline(file, line)) {
+            stringstream ss(line);
+            
+            ss >> apName >> nPeople >> nDelays >> avgReviews;
+
+            a[apName][0].push_back(nPeople);
+            a[apName][1].push_back(nDelays);
+            a[apName][2].push_back(avgReviews);
+        }
+        return true;
     }
 }
 
@@ -133,8 +138,8 @@ bool load_data(map<string, array<list<double>, 3>>&, string& filename) {
 void plane_crash(map<string, array<list<double>, 3>>& a) {
     //For a plane crash. drastically decrease nPeople, drastically increase nDelays, and keep avgReviews the same
     for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 0.5;
-       double currentDelays = details[1].back() * 2.0;
+       details[0].back() * 0.5;
+       details[1].back() * 2.0;
     }
     //Add a message after this function is called
 }
@@ -142,9 +147,9 @@ void plane_crash(map<string, array<list<double>, 3>>& a) {
 void weather_event(map<string, array<list<double>, 3>>& a) {
     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
      for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 1.25;
-       double currentDelays = details[1].back() * 1.5;
-       double currentReviews = details[2].back() * 0.7;
+       details[0].back() * 1.25;
+       details[1].back() * 1.5;
+       details[2].back() * 0.7;
     }
     //Add a message after this function is called
 }
@@ -152,8 +157,8 @@ void weather_event(map<string, array<list<double>, 3>>& a) {
 void new_airport_opening(map<string, array<list<double>, 3>>& a) {
     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
      for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 0.8;
-       double currentReviews = details[2].back() * 1.2;
+       details[0].back() * 0.8;
+       details[2].back() * 1.2;
     }
     //Add a message after this function is called
 }
@@ -161,9 +166,9 @@ void new_airport_opening(map<string, array<list<double>, 3>>& a) {
 void computer_error(map<string, array<list<double>, 3>>& a) {
     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
      for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 1.1;
-       double currentDelays = details[1].back() * 1.15;
-       double currentReviews = details[2].back() * 0.85;
+       details[0].back() * 1.1;
+       details[1].back() * 1.15;
+       details[2].back() * 0.85;
     }
     //Add a message after this function is called
 }
@@ -171,9 +176,9 @@ void computer_error(map<string, array<list<double>, 3>>& a) {
 void early_arrival(map<string, array<list<double>, 3>>& a) {
     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
      for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 0.9;
-       double currentDelays = details[1].back() * 0.9;
-       double currentReviews = details[2].back() * 1.25;
+       details[0].back() * 0.9;
+       details[1].back() * 0.9;
+       details[2].back() * 1.25;
     }
     //Add a message after this function is called
 }
@@ -181,9 +186,9 @@ void early_arrival(map<string, array<list<double>, 3>>& a) {
 void holiday_event(map<string, array<list<double>, 3>>& a) {
     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
      for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 1.5;
-       double currentDelays = details[1].back() * 1.3;
-       double currentReviews = details[2].back() * 0.75;
+       details[0].back() * 1.5;
+       details[1].back() * 1.3;
+       details[2].back() * 0.75;
     }
     //Add a message after this function is called
 }
