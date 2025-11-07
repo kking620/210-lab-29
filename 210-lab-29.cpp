@@ -59,7 +59,7 @@ int main() {
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
                     int commonOccurrence = rand() % 100 + 1;
-                    if (commonOccurrence <= 60) {
+                    if (commonOccurrence <= 70) {
                         int e1 = rand() % 100 + 1;
                         if (e1 <= 40)
                         computer_error(airports, pair.first);
@@ -75,7 +75,7 @@ int main() {
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
                     int rareOccurrence = rand() % 100 + 1;
-                    if (rareOccurrence >= 80) {
+                    if (rareOccurrence >= 90) {
                         int e4 = rand() % 100 + 1;
                         if (e4 <= 10)
                         new_airport_opening(airports, pair.first);
@@ -177,7 +177,7 @@ void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
             people_value = people_value * 0.5;
         }
         for (double& delay_value : it->second[1]) {
-            delay_value = delay_value * 2.0;
+            delay_value = delay_value  + 20;
         }
     }
     
@@ -190,13 +190,13 @@ void weather_event(map<string, array<list<double>, 3>>& a, string n) {
     
     if(it != a.end()) {
         for (double& people_value : it->second[0]) {
-            people_value = people_value * 1.25;
+            people_value = people_value * 1.1;
         }
         for (double& delay_value : it->second[1]) {
-            delay_value = delay_value * 1.5;
+            delay_value = delay_value + 15;
         }
         for (double& reviews : it->second[2]) {
-            reviews = reviews * 0.7;
+            reviews = reviews * 0.9;
         }
     }  
    
@@ -209,7 +209,7 @@ void new_airport_opening(map<string, array<list<double>, 3>>& a, string n) {
     
     if(it != a.end()) {
         for (double& people_value : it->second[0]) {
-            people_value = people_value * 0.8;
+            people_value = people_value * 0.9;
         }
         for (double& reviews : it->second[2]) {
             reviews = reviews * 1.2;
@@ -230,10 +230,10 @@ void computer_error(map<string, array<list<double>, 3>>& a, string n) {
             people_value = people_value * 1.1;
         }
         for (double& delay_value : it->second[1]) {
-            delay_value = delay_value * 1.05;
+            delay_value = delay_value + 5;
         }
         for (double& reviews : it->second[2]) {
-            reviews = reviews * 0.95;
+            reviews = reviews * 0.98;
         }
     }
 
@@ -249,10 +249,10 @@ void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
             people_value = people_value * 0.95;
         }
         for (double& delay_value : it->second[1]) {
-            delay_value = delay_value * 0.95;
+            delay_value = delay_value - 4;
         }
         for (double& reviews : it->second[2]) {
-            reviews = reviews * 1.1;
+            reviews = reviews * 1.25;
             if (reviews >= 5.0)
                 reviews = 5.0;
         }
@@ -266,13 +266,13 @@ void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
     
     if(it != a.end()) {
         for (double& people_value : it->second[0]) {
-            people_value = people_value * 1.5;
+            people_value = people_value * 1.25;
         }
         for (double& delay_value : it->second[1]) {
-            delay_value = delay_value * 1.3;
+            delay_value = delay_value + 20;
         }
         for (double& reviews : it->second[2]) {
-            reviews = reviews * 0.8;
+            reviews = reviews * 0.95;
         }
     } 
     cout << "The holiday rush at " << n << " has led to very long lines.\n";
