@@ -85,7 +85,7 @@ int main() {
 
             //print the changes in the values of the airport for the current time interval
             //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
-            for ( auto const& [name, details] : airports) {
+            for ( auto& [name, details] : airports) {
                 cout << fixed << setprecision(0);
                 cout << "For " << name << ":";
 
@@ -133,8 +133,8 @@ bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
 void plane_crash(map<string, array<list<double>, 3>>& a) {
     //For a plane crash. drastically decrease nPeople, drastically increase nDelays, and keep avgReviews the same
     for (auto& [name, details] : a) {
-       details[0].back() * 0.5;
-       details[1].back() * 2.0;
+       details[0].back() = details[0].back() * 0.5;
+       details[1].back() = details[1].back() * 2.0;
     }
     //Add a message after this function is called
 }
@@ -142,9 +142,10 @@ void plane_crash(map<string, array<list<double>, 3>>& a) {
 void weather_event(map<string, array<list<double>, 3>>& a) {
     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() * 1.25;
-       details[1].back() * 1.5;
-       details[2].back() * 0.7;
+       details[0].back() = details[0].back() * 1.25;
+       details[1].back() = details[1].back() * 1.5;
+       if (details[2].back() > 0)
+        details[2].back() = details[2].back() * 0.7;
     }
     //Add a message after this function is called
 }
@@ -152,8 +153,10 @@ void weather_event(map<string, array<list<double>, 3>>& a) {
 void new_airport_opening(map<string, array<list<double>, 3>>& a) {
     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
      for (auto& [name, details] : a) {
-       details[0].back() * 0.8;
-       details[2].back() * 1.2;
+        details[0].back() = details[0].back() * 0.8;
+        details[2].back() = details[2].back() * 1.2;
+        if (details[2].back() >= 5)
+            details[2].back() = 5.0;
     }
     //Add a message after this function is called
 }
@@ -161,9 +164,10 @@ void new_airport_opening(map<string, array<list<double>, 3>>& a) {
 void computer_error(map<string, array<list<double>, 3>>& a) {
     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() * 1.1;
-       details[1].back() * 1.15;
-       details[2].back() * 0.85;
+       details[0].back() = details[0].back() * 1.1;
+       details[1].back() = details[1].back() * 1.05;
+       if (details[2].back() > 0)
+        details[2].back() = details[2].back() * 0.95;
     }
     //Add a message after this function is called
 }
@@ -171,9 +175,11 @@ void computer_error(map<string, array<list<double>, 3>>& a) {
 void early_arrival(map<string, array<list<double>, 3>>& a) {
     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() * 0.9;
-       details[1].back() * 0.9;
-       details[2].back() * 1.25;
+       details[0].back() = details[0].back() * 0.95;
+       details[1].back() = details[1].back() * 0.95;
+        details[2].back() = details[2].back() * 1.25;
+        if (details[2].back() >= 5)
+            details[2].back() = 5.0;
     }
     //Add a message after this function is called
 }
@@ -181,9 +187,10 @@ void early_arrival(map<string, array<list<double>, 3>>& a) {
 void holiday_event(map<string, array<list<double>, 3>>& a) {
     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() * 1.5;
-       details[1].back() * 1.3;
-       details[2].back() * 0.75;
+       details[0].back() = details[0].back() * 1.5;
+       details[1].back() = details[1].back() * 1.3;
+       if (details[2].back() > 0)
+        details[2].back() = details[2].back() * 0.8;
     }
     //Add a message after this function is called
 }
