@@ -23,6 +23,7 @@ void new_airport_opening(map<string, array<list<double>, 3>>&);
 void computer_error(map<string, array<list<double>, 3>>&);
 void early_arrival(map<string, array<list<double>, 3>>&);
 void holiday_event(map<string, array<list<double>, 3>>&);
+bool load_data(map<string, array<list<double>, 3>>&, string);
 
 //Defining the main function
 int main() {
@@ -37,10 +38,7 @@ int main() {
     //Open an external file to read the initial data about the airports to populate the map
         //If the file does not open, print an error message and exit
     ifstream fin("testvalue.txt");
-    if (!fin.is_open()) {
-        cout << "This file could not be found.\n";
-        return 1;
-    }
+    load_data(airports, "testvalue.txt");
 
     //Read the data from the file and populate the map
         //For each line, extract the name of the airport and the details of the airport
@@ -123,6 +121,13 @@ int main() {
     return 0;
 }
 
+bool load_data(map<string, array<list<double>, 3>>&, string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout << filename << " could not be opened.\n";
+        return false;
+    }
+}
 
 //Defining the prototype functions that were initialized earlier in the code
 void plane_crash(map<string, array<list<double>, 3>>& a) {
