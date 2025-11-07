@@ -23,6 +23,7 @@ void new_airport_opening(map<string, array<list<double>, 3>>&, string);
 void computer_error(map<string, array<list<double>, 3>>&, string);
 void early_arrival(map<string, array<list<double>, 3>>&, string);
 void holiday_event(map<string, array<list<double>, 3>>&, string);
+void list_average(map<string, array<list<double>, 3>>&, string);
 bool load_data(map<string, array<list<double>, 3>>&, string);
 
 //Defining the main function
@@ -90,6 +91,8 @@ int main() {
                 cout << fixed << setprecision(0);
                 cout << "For " << name << ":";
 
+                void list_average(map<string, array<list<double>, 3>>&, string);
+
                 cout << details[0].back() << " people are now present, ";
                 cout << details[1].back() << " delays reported, ";
                 cout << fixed << setprecision(2);
@@ -101,7 +104,7 @@ int main() {
     }
 
     cout << endl;
-    cout << "Yearly Summary From the Airports: \n";
+    cout << "Biweekly Summary From the Airports: \n";
     for ( auto& [name, details] : airports) {
         cout << fixed << setprecision(0);
         cout << "For " << name << ":";
@@ -109,7 +112,7 @@ int main() {
         cout << details[0].back() << " people were present, ";
         cout << details[1].back() << " delays were reported, ";
         cout << fixed << setprecision(2);
-        cout << "and the average reviews are " << details[2].back() << " for this year!" << endl; 
+        cout << "and the average reviews are " << details[2].back() << " every two weeks!" << endl; 
     }
 
     //End the main function
@@ -145,66 +148,96 @@ bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
     }
 }
 
+void list_average(map<string, array<list<double>, 3>>&, string);
+
 //Defining the prototype functions that were initialized earlier in the code
 void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
     //For a plane crash. drastically decrease nPeople, drastically increase nDelays, and keep avgReviews the same
-    for (auto& [name, details] : a) {
-        if (name.find(n) != string::npos){
-            details[0].back() = details[0].back() * 0.5;
-            details[1].back() = details[1].back() * 2.0;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 0.5;
+        }
+        for (double& delay_value : it->second[0]) {
+            delay_value = delay_value * 2.0;
         }
     }
+    
     cout << "Tragically, a plane from " << n << " has crashed.\n";
 }
 
 void weather_event(map<string, array<list<double>, 3>>& a, string n) {
     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
-     for (auto& [name, details] : a) {
-       if (name.find(n) != string::npos){
-            details[0].back() = details[0].back() * 1.25;
-            details[1].back() = details[1].back() * 1.5;
-            if (details[2].back() > 0)
-                details[2].back() = details[2].back() * 0.7;
-       }
-    }
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 1.25;
+        }
+        for (double& delay_value : it->second[0]) {
+            delay_value = delay_value * 1.5;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 0.7;
+        }
+    }  
+   
     cout << "Weather events at " << n << " have prevented planes from taking off.\n";
 }
 
 void new_airport_opening(map<string, array<list<double>, 3>>& a, string n) {
     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
-     for (auto& [name, details] : a) {
-        if (name.find(n) != string::npos){
-            details[0].back() = details[0].back() * 0.8;
-            details[2].back() = details[2].back() * 1.2;
-            if (details[2].back() >= 5)
-                details[2].back() = 5.0;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 0.8;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 1.2;
+            if (reviews >= 5.0)
+                reviews = 5.0;
         }
     }
+    
     cout << "A new airport has opened near  " << n << "!\n";
 }
 
 void computer_error(map<string, array<list<double>, 3>>& a, string n) {
     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-     for (auto& [name, details] : a) {
-        if (name.find(n) != string::npos){
-            details[0].back() = details[0].back() * 1.1;
-            details[1].back() = details[1].back() * 1.05;
-            if (details[2].back() > 0)
-                details[2].back() = details[2].back() * 0.95;
+     auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 1.1;
+        }
+        for (double& delay_value : it->second[0]) {
+            delay_value = delay_value * 1.05;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 0.95;
         }
     }
+
     cout << "A computer error at " << n << " has delayed the boarding process.\n";
 }
 
 void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
-     for (auto& [name, details] : a) {
-        if (name.find(n) != string::npos){
-            details[0].back() = details[0].back() * 0.95;
-            details[1].back() = details[1].back() * 0.95;
-            details[2].back() = details[2].back() * 1.25;
-            if (details[2].back() >= 5)
-                details[2].back() = 5.0;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 0.95;
+        }
+        for (double& delay_value : it->second[0]) {
+            delay_value = delay_value * 0.95;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 1.1;
+            if (reviews >= 5.0)
+                reviews = 5.0;
         }
     }
    cout << "A plane at " << n << " has arrived early!\n";
@@ -212,13 +245,18 @@ void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
 
 void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
-     for (auto& [name, details] : a) {
-        if (name.find(n) != string::npos){
-            details[0].back() = details[0].back() * 1.5;
-            details[1].back() = details[1].back() * 1.3;
-            if (details[2].back() > 0)
-                details[2].back() = details[2].back() * 0.8;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 1.5;
         }
-    }
+        for (double& delay_value : it->second[0]) {
+            delay_value = delay_value * 1.3;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 0.8;
+        }
+    } 
     cout << "The holiday rush at " << n << " has led to very long lines.\n";
 }
