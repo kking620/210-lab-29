@@ -8,8 +8,8 @@ I plan to use a std:map to store and manage data related to the different attrib
 This map will also categorize the averages for each of the given attributes, which will be designated into a std::array with three std::lists representing
 the number of people within the airport, how many delays were reported, and average reviews for the day.
 
-One map entry would be for an airport on the West Coast, another entry would be for an airport on the East Cost, and another map entry
-would be for a low population airport. The three lists for each of these map entries would be amount of people, number of delays, and average reviews.
+One map entry would be for an airport on the West Coast< such as LAX, another entry would be for an airport on the East Cost, such as JFK, and another map entry
+would be for a low population airport, such as HCA. The three lists for each of these map entries would be amount of people, number of delays, and average reviews.
 The name of the airport will serve as the key for the map.
 
 Simluated Events:

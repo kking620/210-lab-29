@@ -81,8 +81,9 @@ int main() {
                     int e6 = rand() % 100 + 1;
                     if (e6 <= 1)
                     plane_crash(airports, pair.first);
-            }
 
+                    cout << endl;
+            }
             //print the changes in the values of the airport for the current time interval
             //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
             for ( auto& [name, details] : airports) {
@@ -95,8 +96,22 @@ int main() {
                 cout << "and the average reviews are " << details[2].back() << endl; 
             }
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
+        cout << endl;
         this_thread::sleep_for(chrono::seconds(1));
     }
+
+    cout << endl;
+    cout << "Yearly Summary From the Airports: \n";
+    for ( auto& [name, details] : airports) {
+        cout << fixed << setprecision(0);
+        cout << "For " << name << ":";
+
+        cout << details[0].back() << " people were present, ";
+        cout << details[1].back() << " delays were reported, ";
+        cout << fixed << setprecision(2);
+        cout << "and the average reviews are " << details[2].back() << " for this year!" << endl; 
+    }
+
     //End the main function
     return 0;
 }
@@ -139,7 +154,7 @@ void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
             details[1].back() = details[1].back() * 2.0;
         }
     }
-    //Add a message after this function is called
+    cout << "Tragically, a plane from " << n << " has crashed.\n";
 }
 
 void weather_event(map<string, array<list<double>, 3>>& a, string n) {
@@ -152,7 +167,7 @@ void weather_event(map<string, array<list<double>, 3>>& a, string n) {
                 details[2].back() = details[2].back() * 0.7;
        }
     }
-    //Add a message after this function is called
+    cout << "Weather events at " << n << " have prevented planes from taking off.\n";
 }
 
 void new_airport_opening(map<string, array<list<double>, 3>>& a, string n) {
@@ -165,7 +180,7 @@ void new_airport_opening(map<string, array<list<double>, 3>>& a, string n) {
                 details[2].back() = 5.0;
         }
     }
-    //Add a message after this function is called
+    cout << "A new airport has opened near  " << n << "!\n";
 }
 
 void computer_error(map<string, array<list<double>, 3>>& a, string n) {
@@ -178,7 +193,7 @@ void computer_error(map<string, array<list<double>, 3>>& a, string n) {
                 details[2].back() = details[2].back() * 0.95;
         }
     }
-    //Add a message after this function is called
+    cout << "A computer error at " << n << " has delayed the boarding process.\n";
 }
 
 void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
@@ -192,7 +207,7 @@ void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
                 details[2].back() = 5.0;
         }
     }
-    //Add a message after this function is called
+   cout << "A plane at " << n << " has arrived early!\n";
 }
 
 void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
@@ -205,5 +220,5 @@ void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
                 details[2].back() = details[2].back() * 0.8;
         }
     }
-    //Add a message after this function is called
+    cout << "The holiday rush at " << n << " has led to very long lines.\n";
 }
