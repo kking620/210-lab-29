@@ -17,12 +17,12 @@
 using namespace std;
 
 //Defining function that will be used to simulate environmental changes over time
-void plane_crash(map<string, array<list<double>, 3>>&);
-void weather_event(map<string, array<list<double>, 3>>&);
-void new_airport_opening(map<string, array<list<double>, 3>>&);
-void computer_error(map<string, array<list<double>, 3>>&);
-void early_arrival(map<string, array<list<double>, 3>>&);
-void holiday_event(map<string, array<list<double>, 3>>&);
+void plane_crash(map<string, array<list<double>, 3>>&, string);
+void weather_event(map<string, array<list<double>, 3>>&, string);
+void new_airport_opening(map<string, array<list<double>, 3>>&, string);
+void computer_error(map<string, array<list<double>, 3>>&, string);
+void early_arrival(map<string, array<list<double>, 3>>&, string);
+void holiday_event(map<string, array<list<double>, 3>>&, string);
 bool load_data(map<string, array<list<double>, 3>>&, string);
 
 //Defining the main function
@@ -57,30 +57,30 @@ int main() {
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
                     int e1 = rand() % 100 + 1;
-                    if (e1 <= 60)
-                    computer_error(airports);
+                    if (e1 <= 40)
+                    computer_error(airports, pair.first);
                     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
                     int e2 = rand() % 100 + 1;
-                    if (e2 <= 40)
-                    early_arrival(airports);
+                    if (e2 <= 30)
+                    early_arrival(airports, pair.first);
                     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
                     int e3 = rand() % 100 + 1;
-                    if (e3 <= 35)
-                    holiday_event(airports);
+                    if (e3 <= 20)
+                    holiday_event(airports, pair.first);
 
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
                     int e4 = rand() % 100 + 1;
-                    if (e4 <= 15)
-                    new_airport_opening(airports);
+                    if (e4 <= 10)
+                    new_airport_opening(airports, pair.first);
                     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
                     int e5 = rand() % 100 + 1;
-                    if (e5 <= 10)
-                    new_airport_opening(airports);
+                    if (e5 <= 5)
+                    weather_event(airports, pair.first);
                     //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
                     int e6 = rand() % 100 + 1;
                     if (e6 <= 1)
-                    new_airport_opening(airports);
+                    plane_crash(airports, pair.first);
             }
 
             //print the changes in the values of the airport for the current time interval
@@ -101,6 +101,7 @@ int main() {
     return 0;
 }
 
+//boolean function that will return true if the file is appropriately uploaded to the map
 bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
     ifstream file(filename);
 
@@ -130,67 +131,79 @@ bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
 }
 
 //Defining the prototype functions that were initialized earlier in the code
-void plane_crash(map<string, array<list<double>, 3>>& a) {
+void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
     //For a plane crash. drastically decrease nPeople, drastically increase nDelays, and keep avgReviews the same
     for (auto& [name, details] : a) {
-       details[0].back() = details[0].back() * 0.5;
-       details[1].back() = details[1].back() * 2.0;
+        if (name.find(n) != string::npos){
+            details[0].back() = details[0].back() * 0.5;
+            details[1].back() = details[1].back() * 2.0;
+        }
     }
     //Add a message after this function is called
 }
 
-void weather_event(map<string, array<list<double>, 3>>& a) {
+void weather_event(map<string, array<list<double>, 3>>& a, string n) {
     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() = details[0].back() * 1.25;
-       details[1].back() = details[1].back() * 1.5;
-       if (details[2].back() > 0)
-        details[2].back() = details[2].back() * 0.7;
+       if (name.find(n) != string::npos){
+            details[0].back() = details[0].back() * 1.25;
+            details[1].back() = details[1].back() * 1.5;
+            if (details[2].back() > 0)
+                details[2].back() = details[2].back() * 0.7;
+       }
     }
     //Add a message after this function is called
 }
 
-void new_airport_opening(map<string, array<list<double>, 3>>& a) {
+void new_airport_opening(map<string, array<list<double>, 3>>& a, string n) {
     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
      for (auto& [name, details] : a) {
-        details[0].back() = details[0].back() * 0.8;
-        details[2].back() = details[2].back() * 1.2;
-        if (details[2].back() >= 5)
-            details[2].back() = 5.0;
+        if (name.find(n) != string::npos){
+            details[0].back() = details[0].back() * 0.8;
+            details[2].back() = details[2].back() * 1.2;
+            if (details[2].back() >= 5)
+                details[2].back() = 5.0;
+        }
     }
     //Add a message after this function is called
 }
 
-void computer_error(map<string, array<list<double>, 3>>& a) {
+void computer_error(map<string, array<list<double>, 3>>& a, string n) {
     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() = details[0].back() * 1.1;
-       details[1].back() = details[1].back() * 1.05;
-       if (details[2].back() > 0)
-        details[2].back() = details[2].back() * 0.95;
+        if (name.find(n) != string::npos){
+            details[0].back() = details[0].back() * 1.1;
+            details[1].back() = details[1].back() * 1.05;
+            if (details[2].back() > 0)
+                details[2].back() = details[2].back() * 0.95;
+        }
     }
     //Add a message after this function is called
 }
 
-void early_arrival(map<string, array<list<double>, 3>>& a) {
+void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() = details[0].back() * 0.95;
-       details[1].back() = details[1].back() * 0.95;
-        details[2].back() = details[2].back() * 1.25;
-        if (details[2].back() >= 5)
-            details[2].back() = 5.0;
+        if (name.find(n) != string::npos){
+            details[0].back() = details[0].back() * 0.95;
+            details[1].back() = details[1].back() * 0.95;
+            details[2].back() = details[2].back() * 1.25;
+            if (details[2].back() >= 5)
+                details[2].back() = 5.0;
+        }
     }
     //Add a message after this function is called
 }
 
-void holiday_event(map<string, array<list<double>, 3>>& a) {
+void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
      for (auto& [name, details] : a) {
-       details[0].back() = details[0].back() * 1.5;
-       details[1].back() = details[1].back() * 1.3;
-       if (details[2].back() > 0)
-        details[2].back() = details[2].back() * 0.8;
+        if (name.find(n) != string::npos){
+            details[0].back() = details[0].back() * 1.5;
+            details[1].back() = details[1].back() * 1.3;
+            if (details[2].back() > 0)
+                details[2].back() = details[2].back() * 0.8;
+        }
     }
     //Add a message after this function is called
 }
