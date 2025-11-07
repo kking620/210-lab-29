@@ -5,7 +5,7 @@ This software will illustrate the potential impact of certain events on the pred
 
 Implementation:
 I plan to use a std:map to store and manage data related to the different attributes of each airport across the country.
-This map will also categorize the averages for each of the given attributes, which will be designated into three std::lists representing
+This map will also categorize the averages for each of the given attributes, which will be designated into a std::array with three std::lists representing
 the number of people within the airport, how many delays were reported, and average reviews for the day.
 
 One map entry would be for an airport on the West Coast, another entry would be for an airport on the East Cost, and another map entry
