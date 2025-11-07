@@ -56,48 +56,43 @@ int main() {
                 //for this code, dummy values have been placed in the eventOccurs section, but will be randomized during actual program
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-                    int eventOccurs = rand() % 100 + 1;
-                    if (eventOccurs <= 60)
+                    int e1 = rand() % 100 + 1;
+                    if (e1 <= 60)
                     computer_error(airports);
                     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
-                    eventOccurs = rand() % 100 + 1;
-                    if (eventOccurs <= 40)
+                    int e2 = rand() % 100 + 1;
+                    if (e2 <= 40)
                     early_arrival(airports);
                     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
-                    eventOccurs = rand() % 100 + 1;
-                    if (eventOccurs <= 35)
+                    int e3 = rand() % 100 + 1;
+                    if (e3 <= 35)
                     holiday_event(airports);
 
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
-                    eventOccurs = rand() % 100 + 1;
-                    if (eventOccurs <= 15)
+                    int e4 = rand() % 100 + 1;
+                    if (e4 <= 15)
                     new_airport_opening(airports);
                     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
-                    eventOccurs = rand() % 100 + 1;
-                    if (eventOccurs <= 10)
+                    int e5 = rand() % 100 + 1;
+                    if (e5 <= 10)
                     new_airport_opening(airports);
                     //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
-                    eventOccurs = rand() % 100 + 1;
-                    if (eventOccurs <= 1)
+                    int e6 = rand() % 100 + 1;
+                    if (e6 <= 1)
                     new_airport_opening(airports);
+            }
 
-                //print the changes in the values of the airport for the current time interval
-                    //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
-                for ( auto const& [name, details] : airports) {
-                    cout << fixed << setprecision(0);
-                    cout << "For " << pair.first << ":";
-                    for (double people : pair.second[0]){
-                        cout << people << " people are now present, ";
-                    }
-                    for (double delay : pair.second[1]){
-                        cout << delay << " delays reported, ";
-                    }
-                        cout << fixed << setprecision(2);
-                    for (double review : pair.second[2]){
-                        cout << "and the average reviews are " << review << endl; 
-                    }
-                }
+            //print the changes in the values of the airport for the current time interval
+            //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
+            for ( auto const& [name, details] : airports) {
+                cout << fixed << setprecision(0);
+                cout << "For " << name << ":";
+
+                cout << details[0].back() << " people are now present, ";
+                cout << details[1].back() << " delays reported, ";
+                cout << fixed << setprecision(2);
+                cout << "and the average reviews are " << details[2].back() << endl; 
             }
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
         this_thread::sleep_for(chrono::seconds(1));
