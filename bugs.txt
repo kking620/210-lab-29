@@ -1,0 +1,36 @@
+Bugs Encountered:
+Bug 1 - The data from the input file was not being read completely, only the name was being accepted as an argument.
+        To solve this, I needed to include the header <sstream> in order to accept all of one line onto an single string value
+        and parsing through the string to obtain each individual argument.
+
+Bug 2 - The data was skipping over string items that had a comma in the argument when parsing through the string.
+        To solve this, I ensured that the input file did not generate commas in the arguments for each individual variable.
+
+Bug 3 - The output was displaying the data multiple times, when only one output was necessary.
+        To solve this, I removed an additional for loop that was in place, which was outputting the final results after our program
+        ran three times instead of once.
+
+Bug 4 - Only the final value was being outputted instead of the average of the entire list.
+        In order to solve this I removed the .back() function and instead traversed through the array of lists and accessed each individual
+        piece of data in order to calculate the average and modify the data as necessary.
+
+Bug 5 - When one function was called, all of the maps were modified.
+        In order to solve this, instead of just sending the map as a whole, I also sent the name of the desired airport and used that as a search-key
+        within the argument in order to ensure that only the designated airport's data was modified.
+
+Bug 6 - When adjusting the ratings of the airports, the ratings would go beyond 5.0.
+        In order to solve this, I adjusted the code so that if the value of the average code went beyond 5.0, the code would automatically set the
+        average value of the ratings to 5.0.
+
+Bug 7 - The search-key was not accepting the desired name as an argument.
+        In order to fix this, I implemented the .find(n) function that would search for the designated string on the map, as denoted by n, that was associated
+        with the name of the airport that was sent as an argument. This allowed the code to find the desired map and adjust the values as necessary.
+
+Bug 8 - The output was displaying unnecessary spaces between events and data modifications.
+        In order to solve this, I removed an unnecessary endline within an external function that would cause an unnecessary gap when called.
+
+Bug 9 - The final output would not display the actual values of the data we were searching for, instead giving us an output error.
+        In order to solve this, I declared an external function in order to calculate the desired averages and returned that value to equal an integer declared before
+        this function was called. Then I would output those values instead of trying to directly access the values of the list.
+
+Bug 10 - 
