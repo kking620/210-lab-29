@@ -106,6 +106,7 @@ int main() {
                 cout << fixed << setprecision(2);
                 cout << "and the average reviews are " << rwAvg << endl; 
             }
+        cout << endl;
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
         this_thread::sleep_for(chrono::seconds(1));
     }
@@ -226,7 +227,7 @@ void computer_error(map<string, array<list<double>, 3>>& a, string n) {
     
     if(it != a.end()) {
         for (double& people_value : it->second[0]) {
-            people_value = people_value * 1.1;
+            people_value = people_value * 1.05;
         }
         for (double& delay_value : it->second[1]) {
             delay_value = delay_value + 5;
@@ -265,7 +266,7 @@ void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
     
     if(it != a.end()) {
         for (double& people_value : it->second[0]) {
-            people_value = people_value * 1.25;
+            people_value = people_value * 1.15;
         }
         for (double& delay_value : it->second[1]) {
             delay_value = delay_value + 20;

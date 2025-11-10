@@ -29,8 +29,9 @@ Bug 7 - The search-key was not accepting the desired name as an argument.
 Bug 8 - The output was displaying unnecessary spaces between events and data modifications.
         In order to solve this, I removed an unnecessary endline within an external function that would cause an unnecessary gap when called.
 
-Bug 9 - The final output would not display the actual values of the data we were searching for, instead giving us an output error.
+Bug 9 - The number of people reported every two weeks would reach unrealistic highs, such as 100 million people every two weeks.
+        Adjusted the values within the modification functions, so that it would adjust the values in a manner that would reflect reality better.
+
+Bug 10 - The final output would not display the actual values of the data we were searching for, instead giving us an output error.
         In order to solve this, I declared an external function in order to calculate the desired averages and returned that value to equal an integer declared before
         this function was called. Then I would output those values instead of trying to directly access the values of the list.
-
-Bug 10 - 
