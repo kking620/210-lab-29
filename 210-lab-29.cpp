@@ -10,6 +10,7 @@
 #include <cmath>
 #include <string>
 #include <algorithm>
+#include <numeric>
 #include <array>
 #include <chrono>
 #include <thread>
@@ -17,12 +18,14 @@
 using namespace std;
 
 //Defining function that will be used to simulate environmental changes over time
-void plane_crash(map<string, array<list<double>, 3>>&);
-void weather_event(map<string, array<list<double>, 3>>&);
-void new_airport_opening(map<string, array<list<double>, 3>>&);
-void computer_error(map<string, array<list<double>, 3>>&);
-void early_arrival(map<string, array<list<double>, 3>>&);
-void holiday_event(map<string, array<list<double>, 3>>&);
+void plane_crash(map<string, array<list<double>, 3>>&, string);
+void weather_event(map<string, array<list<double>, 3>>&, string);
+void new_airport_opening(map<string, array<list<double>, 3>>&, string);
+void computer_error(map<string, array<list<double>, 3>>&, string);
+void early_arrival(map<string, array<list<double>, 3>>&, string);
+void holiday_event(map<string, array<list<double>, 3>>&, string);
+double list_average(list<double>&);
+bool load_data(map<string, array<list<double>, 3>>&, string);
 
 //Defining the main function
 int main() {
@@ -37,33 +40,15 @@ int main() {
     //Open an external file to read the initial data about the airports to populate the map
         //If the file does not open, print an error message and exit
     ifstream fin("testvalue.txt");
-    if (!fin.is_open()) {
-        cout << "This file could not be found.\n";
+    if (load_data(airports, "testvalue.txt") == false)
         return 1;
-    }
-
-    //Read the data from the file and populate the map
-        //For each line, extract the name of the airport and the details of the airport
-        //Insert the approrpiate airport details into the map
-        string line;
-        string apName;
-        double nPeople, nDelays, avgReviews;
-
-        while(getline(fin, line)) {
-            stringstream ss(line);
-            
-            ss >> apName >> nPeople >> nDelays >> avgReviews;
-
-            airports[apName][0].push_back(nPeople);
-            airports[apName][1].push_back(nDelays);
-            airports[apName][2].push_back(avgReviews);
-        }
     //Close the file
     fin.close();
 
     //Begin a time-based simulation for the typical changes in the data for the airport
     for (int timeInterval = 0; timeInterval < 26; timeInterval++) {
         //for 26 time intervals
+        cout << "Time Period " << timeInterval + 1 << endl;
             //Iterate through each airport in the map
             for (auto &pair : airports) {
             //for each airport, simulate the changes that you will see
@@ -73,112 +58,222 @@ int main() {
                 //for this code, dummy values have been placed in the eventOccurs section, but will be randomized during actual program
                     //Common occurences that will be randomly generated:
                     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-                    int eventOccurs = 60;
-                    if (eventOccurs <= 60)
-                    computer_error(airports);
-                    //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
-                    eventOccurs = 40;
-                    if (eventOccurs <= 40)
-                    early_arrival(airports);
-                    //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
-                    eventOccurs = 35;
-                    if (eventOccurs <= 35)
-                    holiday_event(airports);
-
+                    int commonOccurrence = rand() % 100 + 1;
+                    if (commonOccurrence <= 70) {
+                        int e1 = rand() % 100 + 1;
+                        if (e1 <= 40)
+                        computer_error(airports, pair.first);
+                        //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
+                        int e2 = rand() % 100 + 1;
+                        if (e2 <= 30)
+                        early_arrival(airports, pair.first);
+                        //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
+                        int e3 = rand() % 100 + 1;
+                        if (e3 <= 20)
+                        holiday_event(airports, pair.first);
+                    }
                     //Rarer occurences that will randomly be generated:
                     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
-                    eventOccurs = 15;
-                    if (eventOccurs <= 15)
-                    new_airport_opening(airports);
-                    //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
-                    eventOccurs = 10;
-                    if (eventOccurs <= 10)
-                    new_airport_opening(airports);
-                    //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
-                    eventOccurs = 1;
-                    if (eventOccurs <= 1)
-                    new_airport_opening(airports);
+                    int rareOccurrence = rand() % 100 + 1;
+                    if (rareOccurrence >= 90) {
+                        int e4 = rand() % 100 + 1;
+                        if (e4 <= 10)
+                        new_airport_opening(airports, pair.first);
+                        //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
+                        int e5 = rand() % 100 + 1;
+                        if (e5 <= 5)
+                        weather_event(airports, pair.first);
+                        //For a plane crash. drastically decrease nPeople, drastically increase nDealys, and keep avgReviews the same
+                        int e6 = rand() % 100 + 1;
+                        if (e6 <= 1)
+                        plane_crash(airports, pair.first);
+                    }
+                    cout << endl;
+            }
+            //print the changes in the values of the airport for the current time interval
+            //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
+            for ( auto& [name, details] : airports) {
+                cout << fixed << setprecision(0);
+                cout << "For " << name << ":";
 
-                //print the changes in the values of the airport for the current time interval
-                    //e.g. "For {airport name}: {nPeople} are now present, there are {nDelays} reported, and the average reviews are {avgReviews}"
-                for ( map<string, airportDetails>::iterator it = airports.begin(); it != airports.end(); ++it) {
-                    cout << fixed << setprecision(0);
-                    cout << "For " << pair.first << ":";
-                    for (double people : pair.second[0]){
-                        cout << people << " people are now present, ";
-                    }
-                    for (double delay : pair.second[1]){
-                        cout << delay << " delays reported, ";
-                    }
-                        cout << fixed << setprecision(2);
-                    for (double review : pair.second[2]){
-                        cout << "and the average reviews are " << review << endl; 
-                    }
-                }
+                double pwAvg = list_average(details[0]);
+                double dwAvg = list_average(details[1]);
+                double rwAvg = list_average(details[2]);
+                
+
+                cout << pwAvg << " people are now present, ";
+                cout << dwAvg << " delays reported, ";
+                cout << fixed << setprecision(2);
+                cout << "and the average reviews are " << rwAvg << endl; 
             }
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
+        cout << endl;
         this_thread::sleep_for(chrono::seconds(1));
     }
+
+    cout << endl;
+    cout << "Biweekly Summary From the Airports: \n";
+    for ( auto& [name, details] : airports) {
+        cout << fixed << setprecision(0);
+        cout << "For " << name << ":";
+
+            double pyAvg = list_average(details[0]);
+            double dyAvg = list_average(details[1]);
+            double ryAvg = list_average(details[2]);
+
+        cout << pyAvg << " people were present, ";
+        cout << dyAvg << " delays were reported, ";
+        cout << fixed << setprecision(2);
+        cout << "and the average reviews are " << ryAvg << " every two weeks!" << endl; 
+    }
+
     //End the main function
     return 0;
 }
 
+//boolean function that will return true if the file is appropriately uploaded to the map
+bool load_data(map<string, array<list<double>, 3>>& a, string filename) {
+    ifstream file(filename);
+
+    if (!file.is_open()) {
+        cout << filename << " could not be opened.\n";
+        return false;
+    }
+    else {
+         //Read the data from the file and populate the map
+        //For each line, extract the name of the airport and the details of the airport
+        //Insert the approrpiate airport details into the map
+        string line;
+        string apName;
+        double nPeople, nDelays, avgReviews;
+
+        while(getline(file, line)) {
+            stringstream ss(line);
+            
+            ss >> apName >> nPeople >> nDelays >> avgReviews;
+
+            a[apName][0].push_back(nPeople);
+            a[apName][1].push_back(nDelays);
+            a[apName][2].push_back(avgReviews);
+        }
+        return true;
+    }
+}
+
+double list_average(list<double>& aData) {
+    double sum = accumulate(aData.begin(), aData.end(), 0.0);
+    double average = sum / aData.size();
+
+    return average;
+}
 
 //Defining the prototype functions that were initialized earlier in the code
-void plane_crash(map<string, array<list<double>, 3>>& a) {
+void plane_crash(map<string, array<list<double>, 3>>& a, string n) {
     //For a plane crash. drastically decrease nPeople, drastically increase nDelays, and keep avgReviews the same
-    for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 0.5;
-       double currentDelays = details[1].back() * 2.0;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 0.5;
+        }
+        for (double& delay_value : it->second[1]) {
+            delay_value = delay_value  + 20;
+        }
     }
-    //Add a message after this function is called
+    
+    cout << "Tragically, a plane from " << n << " has crashed.\n";
 }
 
-void weather_event(map<string, array<list<double>, 3>>& a) {
+void weather_event(map<string, array<list<double>, 3>>& a, string n) {
     //For extreme weather events, increase nPeople, drastically increase nDelays, and drastically decrease avgReviews
-     for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 1.25;
-       double currentDelays = details[1].back() * 1.5;
-       double currentReviews = details[2].back() * 0.7;
-    }
-    //Add a message after this function is called
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 1.1;
+        }
+        for (double& delay_value : it->second[1]) {
+            delay_value = delay_value + 15;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 0.9;
+        }
+    }  
+   
+    cout << "Weather events at " << n << " have prevented planes from taking off.\n";
 }
 
-void new_airport_opening(map<string, array<list<double>, 3>>& a) {
+void new_airport_opening(map<string, array<list<double>, 3>>& a, string n) {
     //For the opening of other nearby airports, decrease nPeople, keep nDelays the same, and increase avgReviews slightly
-     for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 0.8;
-       double currentReviews = details[2].back() * 1.2;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 0.9;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 1.2;
+            if (reviews >= 5.0)
+                reviews = 5.0;
+        }
     }
-    //Add a message after this function is called
+    
+    cout << "A new airport has opened near  " << n << "!\n";
 }
 
-void computer_error(map<string, array<list<double>, 3>>& a) {
+void computer_error(map<string, array<list<double>, 3>>& a, string n) {
     //For a computer error, increase nPeople, increase nDelays, and decrease avgReviews
-     for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 1.1;
-       double currentDelays = details[1].back() * 1.15;
-       double currentReviews = details[2].back() * 0.85;
+     auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 1.1;
+        }
+        for (double& delay_value : it->second[1]) {
+            delay_value = delay_value + 5;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 0.98;
+        }
     }
-    //Add a message after this function is called
+
+    cout << "A computer error at " << n << " has delayed the boarding process.\n";
 }
 
-void early_arrival(map<string, array<list<double>, 3>>& a) {
+void early_arrival(map<string, array<list<double>, 3>>& a, string n) {
     //For an early arrival, decrease nPeople, decrease nDelays, and increase avgReviews
-     for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 0.9;
-       double currentDelays = details[1].back() * 0.9;
-       double currentReviews = details[2].back() * 1.25;
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 0.95;
+        }
+        for (double& delay_value : it->second[1]) {
+            delay_value = delay_value - 4;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 1.25;
+            if (reviews >= 5.0)
+                reviews = 5.0;
+        }
     }
-    //Add a message after this function is called
+   cout << "A plane at " << n << " has arrived early!\n";
 }
 
-void holiday_event(map<string, array<list<double>, 3>>& a) {
+void holiday_event(map<string, array<list<double>, 3>>& a, string n) {
     //For a holiday, increase nPeople significantly, increase nDelays drastically, and decrease avgReviews
-     for (auto& [name, details] : a) {
-       double currentPeople = details[0].back() * 1.5;
-       double currentDelays = details[1].back() * 1.3;
-       double currentReviews = details[2].back() * 0.75;
-    }
-    //Add a message after this function is called
+    auto it = a.find(n);
+    
+    if(it != a.end()) {
+        for (double& people_value : it->second[0]) {
+            people_value = people_value * 1.25;
+        }
+        for (double& delay_value : it->second[1]) {
+            delay_value = delay_value + 20;
+        }
+        for (double& reviews : it->second[2]) {
+            reviews = reviews * 0.95;
+        }
+    } 
+    cout << "The holiday rush at " << n << " has led to very long lines.\n";
 }

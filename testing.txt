@@ -1,0 +1,16 @@
+In order to perform unit testing for each of my functions, I will isolate the function and input dummy values to ensure that each function
+properly recieves and returns, if the code calls for it, what is expected. One example of which I did this is with my list_average
+function, which is designed to take a specific list and calculate the averages of all of the individual list elements. I created a dummy list object,
+called the list_average function with the dummy list as its argument and found the results.
+
+Example:
+list<double> airport_data = {10, 20, 30, 40};
+
+double average = list_average(airport_data);
+
+double list_average(list<double>& aData) {
+    double sum = accumulate(aData.begin(), aData.end(), 0.0);
+    double average = sum / aData.size();
+
+    return average;
+}
