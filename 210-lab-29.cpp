@@ -107,7 +107,6 @@ int main() {
                 cout << "and the average reviews are " << rwAvg << endl; 
             }
         //Wait or pause briefly to simulate the passage of "two weeks" between time intervals
-        cout << endl;
         this_thread::sleep_for(chrono::seconds(1));
     }
 
